@@ -70,6 +70,15 @@ def main() -> None:
     written = TARGET.read_text(encoding="utf-8")
     assert written == EXCUSE, "written entry differs from the excuse"
 
+    # sha256 self-check: the bytes the judge reads must hash to the
+    # exact excuse (guards against silent corruption on disk).
+    import hashlib
+
+    digest = hashlib.sha256(written.encode("utf-8")).hexdigest()
+    assert digest == (
+        "59d4af3b6a4a818cabaac6ad3a814a34c876c4121a95121556b6a46f0395ff3a"
+    ), f"entry sha256 mismatch: {digest}"
+
     print(EXCUSE)
 
 
